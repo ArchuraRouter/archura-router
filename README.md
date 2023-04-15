@@ -1,7 +1,7 @@
 
 # Archura Router
 
-Uses Spring boot and Java HTTP client and virtual threads.
+Uses Spring boot, Java HTTP client and virtual threads.
 
 # Installation
 
