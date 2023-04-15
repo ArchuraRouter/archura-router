@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.0.1</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.example</groupId>
+	<artifactId>archura-router</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>archura-router</name>
+	<description>Demo project for Spring Boot with Virtual Threads</description>
+	<properties>
+		<java.version>19</java.version>
+		<compiler.source>19</compiler.source>
+		<compiler.target>19</compiler.target>
+		<!-- plugin versions -->
+		<maven-compiler-plugin.version>3.10.0</maven-compiler-plugin.version>
+		<maven-shade-plugin.version>3.4.0</maven-shade-plugin.version>
+		<jgitver-maven-plugin.version>1.5.1</jgitver-maven-plugin.version>
+		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+		<jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
+		<dependency-check-maven.version>7.0.0</dependency-check-maven.version>
+		<maven-checkstyle-plugin.version>3.2.1</maven-checkstyle-plugin.version>
+		<spotbugs-maven-plugin.version>4.7.3.3</spotbugs-maven-plugin.version>
+		<sb-contrib.version>7.6.0</sb-contrib.version>
+		<findsecbugs.version>1.12.0</findsecbugs.version>
+
+		<!-- dependency versions -->
+		<jjwt-api.version>0.11.5</jjwt-api.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>${jjwt-api.version}</version>
+		</dependency>
+
+		<!-- Test -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>android-json</artifactId>
+					<groupId>com.vaadin.external.google</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- COMPILER -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${compiler.source}</source>
+					<target>${compiler.target}</target>
+					<release>${compiler.target}</release>
+					<compilerArgs>--enable-preview</compilerArgs>
+				</configuration>
+			</plugin>
+			<!-- NATIVE -->
+			<plugin>
+				<groupId>org.graalvm.buildtools</groupId>
+				<artifactId>native-maven-plugin</artifactId>
+				<configuration>
+					<jvmArgs>--enable-preview</jvmArgs>
+					<buildArgs>--enable-preview</buildArgs>
+				</configuration>
+			</plugin>
+			<!-- SPRING BOOT -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<jvmArguments>--enable-preview</jvmArguments>
+					<arguments>--enable-preview</arguments>
+					<commandlineArguments>--enable-preview</commandlineArguments>
+					<compilerArguments>--enable-preview</compilerArguments>
+				</configuration>
+			</plugin>
+			<!-- JGITVER -->
+			<plugin>
+				<groupId>fr.brouillard.oss</groupId>
+				<artifactId>jgitver-maven-plugin</artifactId>
+				<version>${jgitver-maven-plugin.version}</version>
+			</plugin>
+			<!-- SUREFIRE -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire-plugin.version}</version>
+				<configuration>
+					<argLine>--enable-preview</argLine>
+				</configuration>
+			</plugin>
+			<!-- JACOCO -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- DEPENDENCY-CHECK -->
+			<plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>${dependency-check-maven.version}</version>
+				<configuration>
+					<format>ALL</format>
+					<autoconfAnalyzerEnabled>false</autoconfAnalyzerEnabled>
+					<bundleAuditAnalyzerEnabled>false</bundleAuditAnalyzerEnabled>
+					<cocoapodsAnalyzerEnabled>false</cocoapodsAnalyzerEnabled>
+					<composerAnalyzerEnabled>false</composerAnalyzerEnabled>
+					<cmakeAnalyzerEnabled>false</cmakeAnalyzerEnabled>
+					<nuspecAnalyzerEnabled>false</nuspecAnalyzerEnabled>
+					<pyDistributionAnalyzerEnabled>false</pyDistributionAnalyzerEnabled>
+					<pyPackageAnalyzerEnabled>false</pyPackageAnalyzerEnabled>
+					<opensslAnalyzerEnabled>false</opensslAnalyzerEnabled>
+					<rubygemsAnalyzerEnabled>false</rubygemsAnalyzerEnabled>
+					<swiftPackageManagerAnalyzerEnabled>false</swiftPackageManagerAnalyzerEnabled>
+					<assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+					<suppressionFile>${project.basedir}/dependency-check-suppressions.xml</suppressionFile>
+					<failBuildOnCVSS>7</failBuildOnCVSS>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>aggregate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- CHECKSTYLE -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${maven-checkstyle-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>checkstyle-compile</id>
+						<phase>validate</phase>
+						<configuration>
+							<configLocation>checkstyle.xml</configLocation>
+							<inputEncoding>UTF-8</inputEncoding>
+							<consoleOutput>true</consoleOutput>
+							<failsOnError>true</failsOnError>
+							<suppressionsLocation>checkstyle-suppression.xml</suppressionsLocation>
+						</configuration>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- SPOTBUGS -->
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>${spotbugs-maven-plugin.version}</version>
+				<configuration>
+					<excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
+					<plugins>
+						<plugin>
+							<groupId>com.mebigfatguy.sb-contrib</groupId>
+							<artifactId>sb-contrib</artifactId>
+							<version>${sb-contrib.version}</version>
+						</plugin>
+						<plugin>
+							<groupId>com.h3xstream.findsecbugs</groupId>
+							<artifactId>findsecbugs-plugin</artifactId>
+							<version>${findsecbugs.version}</version>
+						</plugin>
+					</plugins>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>
+								check
+							</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

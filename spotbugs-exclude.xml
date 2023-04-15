@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FindBugsFilter>
+    <Match>
+        <!-- We don't share our application with other apps and libs, returning mutable objects within the codebase is expected. -->
+        <Class name="~.*"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <!-- We don't share our application with other apps and libs, returning mutable objects within the codebase is expected. -->
+        <Class name="~.*"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <!-- Static logger created per class, but passed to the decorator to add domain and tenant info to log line. -->
+        <Class name="~.*"/>
+        <Bug pattern="LO_SUSPECT_LOG_PARAMETER"/>
+    </Match>
+    <Match>
+        <!-- Redis caching not implemented. -->
+        <Class name="~.*RedisCache"/>
+        <Bug pattern="FCBL_FIELD_COULD_BE_LOCAL"/>
+    </Match>
+    <Match>
+        <!-- GlobalConfiguration is just a configuration file, a POJO, ignore the store and return. -->
+        <Class name="~.*GlobalConfiguration"/>
+        <Bug pattern="USBR_UNNECESSARY_STORE_BEFORE_RETURN"/>
+    </Match>
+    <Match>
+        <!-- GlobalConfiguration is just a configuration file, a POJO, ignore the store and return. -->
+        <Class name="~.*GlobalConfiguration\$.*"/>
+        <Bug pattern="USBR_UNNECESSARY_STORE_BEFORE_RETURN"/>
+    </Match>
+    <Match>
+        <!-- We log the exception. -->
+        <Class name="~.*GlobalConfigurationListener"/>
+        <Bug pattern="LEST_LOST_EXCEPTION_STACK_TRACE"/>
+    </Match>
+    <Match>
+        <!-- GlobalConfigurationListener is singleton and there is only one Thread looping, there is no race condition. -->
+        <Class name="~.*GlobalConfigurationListener"/>
+        <Bug pattern="USFW_UNSYNCHRONIZED_SINGLETON_FIELD_WRITES"/>
+    </Match>
+    <Match>
+        <!-- There is no race condition or a problem about multiple threads changing the logger. -->
+        <Class name="~.*InitialFilter"/>
+        <Bug pattern="USFW_UNSYNCHRONIZED_SINGLETON_FIELD_WRITES"/>
+    </Match>
+    <Match>
+        <!-- There is no race condition or a problem about multiple threads changing the logger. -->
+        <Class name="~.*AuthenticationFilter"/>
+        <Bug pattern="USFW_UNSYNCHRONIZED_SINGLETON_FIELD_WRITES"/>
+    </Match>
+    <Match>
+        <!-- There is no race condition or a problem about multiple threads changing the logger. -->
+        <Class name="~.*HeaderFilter"/>
+        <Bug pattern="USFW_UNSYNCHRONIZED_SINGLETON_FIELD_WRITES"/>
+    </Match>
+    <Match>
+        <!-- There is no race condition or a problem about multiple threads changing the logger. -->
+        <Class name="~.*RouteMatchingFilter"/>
+        <Bug pattern="USFW_UNSYNCHRONIZED_SINGLETON_FIELD_WRITES"/>
+    </Match>
+    <Match>
+        <!-- We handle checked and unchecked exceptions together, since this filter is expected to throw ArchuraFilterException with UNAUTHORIZED. -->
+        <Class name="~.*AuthenticationFilter"/>
+        <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
+    </Match>
+    <Match>
+        <!-- We log exception. -->
+        <Class name="~.*AuthenticationFilter"/>
+        <Bug pattern="LEST_LOST_EXCEPTION_STACK_TRACE"/>
+    </Match>
+    <Match>
+        <!-- We catch exceptions while processing JWT, SpotBugs missed that. -->
+        <Class name="~.*AuthenticationFilter"/>
+        <Bug pattern="REC_CATCH_EXCEPTION"/>
+    </Match>
+    <Match>
+        <!-- We cast and return the @SuppressWarnings("unchecked") annotated variables. -->
+        <Class name="~.*AuthenticationFilter"/>
+        <Bug pattern="USBR_UNNECESSARY_STORE_BEFORE_RETURN"/>
+    </Match>
+    <Match>
+        <!-- We cast and return the @SuppressWarnings("unchecked") annotated variables. -->
+        <Class name="~.*HeaderFilter"/>
+        <Bug pattern="USBR_UNNECESSARY_STORE_BEFORE_RETURN"/>
+    </Match>
+    <Match>
+        <!-- We cast and return the @SuppressWarnings("unchecked") annotated variables. -->
+        <Class name="~.*RouteMatchingFilter"/>
+        <Bug pattern="USBR_UNNECESSARY_STORE_BEFORE_RETURN"/>
+    </Match>
+    <Match>
+        <!-- We cast and return the @SuppressWarnings("unchecked") annotated variables. -->
+        <Class name="~.*TenantFilter"/>
+        <Bug pattern="USBR_UNNECESSARY_STORE_BEFORE_RETURN"/>
+    </Match>
+</FindBugsFilter>

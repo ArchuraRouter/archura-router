@@ -1,0 +1,24 @@
+{
+  "name": "wsserverexample",
+  "version": "0.0.1",
+  "description": "A websocket server example",
+  "main": "server.js",
+  "dependencies": {
+    "ws": "^7.5.9"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "websocket"
+  ],
+  "repository": {
+    "url": "git+https://github.com/tigoe/NodeExamples.git"
+  },
+  "author": "Tom Igoe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tigoe/NodeExamples/issues"
+  },
+  "homepage": "https://github.com/tigoe/NodeExamples#readme"
+}

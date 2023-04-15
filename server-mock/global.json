@@ -1,0 +1,261 @@
+{
+  "configurationServerURL": "http://localhost:9010",
+  "notificationServerURL": "ws://localhost:9000",
+  "dynamicConfigurationEnabled": false,
+  "cacheConfiguration": {
+    "url": "memory://",
+    "cacheTtl": 60
+  },
+  "preFilters": {
+    "domain": {
+      "__class": "io.archura.router.config.GlobalConfiguration$FilterConfiguration",
+      "parameters": {}
+    },
+    "tenant": {
+      "__class": "io.archura.router.config.GlobalConfiguration$TenantFilterConfiguration",
+      "parameters": {},
+      "extractConfiguration": {
+        "headerConfiguration": [
+          {
+            "name": "X-Tenant-ID",
+            "regex": "(?<tenantId>.*)",
+            "captureGroups": [
+              "tenantId"
+            ]
+          }
+        ],
+        "pathConfiguration": [
+          {
+            "regex": "^\\/(?<tenantId>\\w+)\\/.*",
+            "captureGroups": [
+              "tenantId"
+            ]
+          }
+        ],
+        "queryConfiguration": [
+          {
+            "name": "tenant_id",
+            "regex": "(?<tenantId>.*)",
+            "captureGroups": [
+              "tenantId"
+            ]
+          }
+        ]
+      }
+    },
+    "blackList": {
+      "__class": "io.archura.router.config.GlobalConfiguration$BlackListFilterConfiguration",
+      "parameters": {},
+      "ips": [
+        "10.20.30.40",
+        "50.60.70.80"
+      ],
+      "domainIps": {
+        "localhost:8080": [
+          "10.20.30.40"
+        ]
+      }
+    }
+  },
+  "domains": {
+    "localhost:8080": {
+      "name": "localhost:8080",
+      "customerAccount": "localhost",
+      "defaultTenantId": "default",
+      "preFilters": {
+        "header": {
+          "__class": "io.archura.router.config.GlobalConfiguration$HeaderFilterConfiguration",
+          "parameters": {},
+          "add": [
+            {
+              "name": "Archura-Original-Method",
+              "value": "${request.method}"
+            },
+            {
+              "name": "Archura-Original-Path",
+              "value": "${request.path}"
+            },
+            {
+              "name": "Archura-Request-Domain",
+              "value": "${request.domain.name}"
+            },
+            {
+              "name": "Archura-Request-Tenant",
+              "value": "${request.tenant.name}"
+            },
+            {
+              "name": "Another-Request-Header",
+              "value": "some-value"
+            }
+          ],
+          "remove": [
+            {
+              "name": "Some-Request-Header"
+            }
+          ],
+          "validate": [
+            {
+              "name": "Only-Numbers-Header",
+              "regex": "^\\d+$"
+            }
+          ],
+          "mandatory": [
+            {
+              "name": "Mandatory-Header"
+            }
+          ]
+        },
+        "routeMatching": {
+          "__class": "io.archura.router.config.GlobalConfiguration$RouteMatchingFilterConfiguration",
+          "parameters": {
+            "archura.route.not-found.url": "http://localhost:9020/not-found.html"
+          },
+          "methodRoutes": {
+            "GET": [
+              {
+                "name": "domain-route-01",
+                "preFilters": {},
+                "postFilters": {},
+                "matchConfiguration": {
+                  "pathConfiguration": [
+                    {
+                      "regex": "/not-found.html",
+                      "captureGroups": []
+                    }
+                  ]
+                },
+                "extractConfiguration": {},
+                "mapConfiguration": {
+                  "url": "http://localhost:9020/not-found.html",
+                  "headers": {
+                    "request-original-method": "${request.header.Archura-Original-Method}",
+                    "request-original-path": "${request.header.Archura-Original-Path}",
+                    "request-domain": "${request.header.Archura-Request-Domain}",
+                    "request-tenant": "${request.header.Archura-Request-Tenant}"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "authentication": {
+          "__class": "io.archura.router.config.GlobalConfiguration$AuthenticationFilterConfiguration",
+          "parameters": {},
+          "routes": ["route-01"],
+          "jwt": false,
+          "bodyTemplate": "{\"domain\": \"${request.domain.name}\",\"tenant\": \"${request.tenant.name}\",\"path\": \"${request.path}\",\"method\": \"${request.method}\",\"HeaderToken\": \"capture.0\",\"QueryToken\": \"capture.QueryToken\",\"Some-Request-Header\": \"${request.header.Some-Request-Header}\"}",
+          "headerConfiguration": {
+            "name": "X-Authentication-Header",
+            "regex": ".*",
+            "captureGroups": []
+          },
+          "pathConfiguration": {
+            "regex": "/token/.*",
+            "captureGroups": []
+          },
+          "queryConfiguration": {
+            "name": "token",
+            "regex": "(?<QueryToken>.*)",
+            "captureGroups": [
+              "QueryToken"
+            ]
+          },
+          "validationConfiguration": {
+            "remoteEndpointConfiguration": {
+              "url": "http://localhost:9020/validate",
+              "cachable": true,
+              "cacheTtl": 60
+            },
+            "staticConfiguration": {
+              "captureMap": {
+                "capture.QueryToken": [
+                  "a-valid-token-001",
+                  "a-valid-token-002",
+                  "a-valid-token-003",
+                  "a-valid-token-004"
+                ],
+                "capture.0": [
+                  "a-valid-token-001",
+                  "a-valid-token-002",
+                  "a-valid-token-003",
+                  "a-valid-token-004"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "postFilters": {},
+      "tenants": {
+        "default": {
+          "name": "default",
+          "preFilters": {
+            "routeMatching": {
+              "__class": "io.archura.router.config.GlobalConfiguration$RouteMatchingFilterConfiguration",
+              "parameters": {},
+              "methodRoutes": {
+                "GET": [
+                  {
+                    "name": "route-01",
+                    "preFilters": {},
+                    "postFilters": {},
+                    "matchConfiguration": {
+                      "pathConfiguration": [
+                        {
+                          "regex": "/user/.*",
+                          "captureGroups": []
+                        }
+                      ]
+                    },
+                    "extractConfiguration": {
+                      "headerConfiguration": [
+                        {
+                          "name": "Some-Request-Header",
+                          "regex": ".*"
+                        }
+                      ]
+                    },
+                    "mapConfiguration": {
+                      "url": "http://localhost:9020${request.path}?${request.query}",
+                      "methodMap": {
+                        "GET": "GET"
+                      },
+                      "headers": {
+                        "original-request-method": "${request.method}",
+                        "original-request-path": "${request.path}",
+                        "original-request-query": "${request.query}"
+                      }
+                    }
+                  },
+                  {
+                    "name": "route-02",
+                    "preFilters": {},
+                    "postFilters": {},
+                    "matchConfiguration": {
+                      "pathConfiguration": [
+                        {
+                          "regex": "/.*",
+                          "captureGroups": []
+                        }
+                      ]
+                    },
+                    "extractConfiguration": {},
+                    "mapConfiguration": {
+                      "url": "https://httpbin.org/get",
+                      "methodMap": {
+                        "GET": "GET"
+                      },
+                      "headers": {
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "postFilters": {}
+        }
+      }
+    }
+  }
+}
