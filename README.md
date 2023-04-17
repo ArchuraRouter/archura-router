@@ -6,6 +6,7 @@ Uses Spring boot, Java HTTP client and virtual threads.
 # Installation
 
 The following steps explain, build, compile to native, create docker image, and run load test.
+Refer to https://www.graalvm.org/latest/docs/getting-started/macos/ to install GraalVM without sdkman.
 
 ```shell
 # use Graalvm Java 19 version
@@ -13,7 +14,10 @@ sdk install java 22.3.r19-grl
 
 # install native image command line tool
 gu install native-image
+```
 
+# Building and Running
+```shell
 # build project
 mvn clean install
 
